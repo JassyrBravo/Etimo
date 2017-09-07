@@ -1,0 +1,919 @@
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+var _jsxFileName = '/Users/Jassyr/pruebaGoogleJassyr/node_modules/react-native-google-places-autocomplete/GooglePlacesAutocomplete.js';
+
+var _react = require('react');
+
+var _react2 = babelHelpers.interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = babelHelpers.interopRequireDefault(_propTypes);
+
+var _reactNative = require('react-native');
+
+var _qs = require('qs');
+
+var _qs2 = babelHelpers.interopRequireDefault(_qs);
+
+var _lodash = require('lodash.debounce');
+
+var _lodash2 = babelHelpers.interopRequireDefault(_lodash);
+
+var WINDOW = _reactNative.Dimensions.get('window');
+
+var defaultStyles = {
+  container: {
+    flex: 1
+  },
+  textInputContainer: {
+    backgroundColor: '#C9C9CE',
+    height: 44,
+    borderTopColor: '#7e7e7e',
+    borderBottomColor: '#b5b5b5',
+    borderTopWidth: 1 / _reactNative.PixelRatio.get(),
+    borderBottomWidth: 1 / _reactNative.PixelRatio.get(),
+    flexDirection: 'row'
+  },
+  textInput: {
+    backgroundColor: '#FFFFFF',
+    height: 28,
+    borderRadius: 5,
+    paddingTop: 4.5,
+    paddingBottom: 4.5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginTop: 7.5,
+    marginLeft: 8,
+    marginRight: 8,
+    fontSize: 15,
+    flex: 1
+  },
+  poweredContainer: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF'
+  },
+  powered: {},
+  listView: {},
+  row: {
+    padding: 13,
+    height: 44,
+    flexDirection: 'row'
+  },
+  separator: {
+    height: _reactNative.StyleSheet.hairlineWidth,
+    backgroundColor: '#c8c7cc'
+  },
+  description: {},
+  loader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    height: 20
+  },
+  androidLoader: {
+    marginRight: -15
+  }
+};
+
+var GooglePlacesAutocomplete = function (_Component) {
+  babelHelpers.inherits(GooglePlacesAutocomplete, _Component);
+
+  function GooglePlacesAutocomplete(props) {
+    babelHelpers.classCallCheck(this, GooglePlacesAutocomplete);
+
+    var _this = babelHelpers.possibleConstructorReturn(this, (GooglePlacesAutocomplete.__proto__ || Object.getPrototypeOf(GooglePlacesAutocomplete)).call(this, props));
+
+    _this._isMounted = false;
+    _this._results = [];
+    _this._requests = [];
+
+    _this.state = _this.getInitialState.call(_this);
+
+    _this.getInitialState = _this.getInitialState.bind(_this);
+    _this.setAddressText = _this.setAddressText.bind(_this);
+    _this.buildRowsFromResults = _this.buildRowsFromResults.bind(_this);
+    _this._abortRequests = _this._abortRequests.bind(_this);
+    _this.triggerFocus = _this.triggerFocus.bind(_this);
+    _this.triggerBlur = _this.triggerBlur.bind(_this);
+    _this.getCurrentLocation = _this.getCurrentLocation.bind(_this);
+    _this._enableRowLoader = _this._enableRowLoader.bind(_this);
+    _this._disableRowLoaders = _this._disableRowLoaders.bind(_this);
+    _this._onPress = _this._onPress.bind(_this);
+    _this._getPredefinedPlace = _this._getPredefinedPlace.bind(_this);
+    _this._filterResultsByTypes = _this._filterResultsByTypes.bind(_this);
+    _this._requestNearby = _this._requestNearby.bind(_this);
+    _this._request = _this._request.bind(_this);
+    _this._onChangeText = _this._onChangeText.bind(_this);
+    _this._handleChangeText = _this._handleChangeText.bind(_this);
+    _this._renderRowData = _this._renderRowData.bind(_this);
+    _this._renderDescription = _this._renderDescription.bind(_this);
+    _this._renderLoader = _this._renderLoader.bind(_this);
+    _this._renderRow = _this._renderRow.bind(_this);
+    _this._renderSeparator = _this._renderSeparator.bind(_this);
+    _this._onBlur = _this._onBlur.bind(_this);
+    _this._onFocus = _this._onFocus.bind(_this);
+    _this._renderPoweredLogo = _this._renderPoweredLogo.bind(_this);
+    _this._shouldShowPoweredLogo = _this._shouldShowPoweredLogo.bind(_this);
+    _this._renderLeftButton = _this._renderLeftButton.bind(_this);
+    _this._renderRightButton = _this._renderRightButton.bind(_this);
+    _this._getFlatList = _this._getFlatList.bind(_this);
+    return _this;
+  }
+
+  babelHelpers.createClass(GooglePlacesAutocomplete, [{
+    key: 'getInitialState',
+    value: function getInitialState() {
+      return {
+        text: this.props.getDefaultValue(),
+        dataSource: this.buildRowsFromResults([]),
+        listViewDisplayed: this.props.listViewDisplayed === 'auto' ? false : this.props.listViewDisplayed
+      };
+    }
+  }, {
+    key: 'setAddressText',
+    value: function setAddressText(address) {
+      this.setState({
+        text: address
+      });
+    }
+  }, {
+    key: 'getAddressText',
+    value: function getAddressText() {
+      return this.state.text;
+    }
+  }, {
+    key: 'buildRowsFromResults',
+    value: function buildRowsFromResults(results) {
+      var res = null;
+
+      if (results.length === 0 || this.props.predefinedPlacesAlwaysVisible === true) {
+        res = [].concat(babelHelpers.toConsumableArray(this.props.predefinedPlaces));
+        if (this.props.currentLocation === true) {
+          res.unshift({
+            description: this.props.currentLocationLabel,
+            isCurrentLocation: true
+          });
+        }
+      } else {
+        res = [];
+      }
+
+      res = res.map(function (place) {
+        return babelHelpers.extends({}, place, {
+          isPredefinedPlace: true
+        });
+      });
+
+      return [].concat(babelHelpers.toConsumableArray(res), babelHelpers.toConsumableArray(results));
+    }
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this._request = this.props.debounce ? (0, _lodash2.default)(this._request, this.props.debounce) : this._request;
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this._isMounted = true;
+      this._onChangeText(this.state.text);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.listViewDisplayed !== 'auto') {
+        this.setState({
+          listViewDisplayed: nextProps.listViewDisplayed
+        });
+      }
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this._abortRequests();
+      this._isMounted = false;
+    }
+  }, {
+    key: '_abortRequests',
+    value: function _abortRequests() {
+      for (var i = 0; i < this._requests.length; i++) {
+        this._requests[i].abort();
+      }
+      this._requests = [];
+    }
+  }, {
+    key: 'triggerFocus',
+    value: function triggerFocus() {
+      if (this.refs.textInput) this.refs.textInput.focus();
+    }
+  }, {
+    key: 'triggerBlur',
+    value: function triggerBlur() {
+      if (this.refs.textInput) this.refs.textInput.blur();
+    }
+  }, {
+    key: 'getCurrentLocation',
+    value: function getCurrentLocation() {
+      var _this2 = this;
+
+      var options = null;
+
+      if (this.props.enableHighAccuracyLocation) {
+        options = _reactNative.Platform.OS === 'android' ? {
+          enableHighAccuracy: true,
+          timeout: 20000
+        } : {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000
+        };
+      }
+
+      navigator.geolocation.getCurrentPosition(function (position) {
+        if (_this2.props.nearbyPlacesAPI === 'None') {
+          var currentLocation = {
+            description: _this2.props.currentLocationLabel,
+            geometry: {
+              location: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              }
+            }
+          };
+          _this2._disableRowLoaders();
+          _this2.props.onPress(currentLocation, currentLocation);
+        } else {
+          _this2._requestNearby(position.coords.latitude, position.coords.longitude);
+        }
+      }, function (error) {
+        _this2._disableRowLoaders();
+        alert(error.message);
+      }, options);
+    }
+  }, {
+    key: '_onPress',
+    value: function _onPress(rowData) {
+      var _this3 = this;
+
+      if (rowData.isPredefinedPlace !== true && this.props.fetchDetails === true) {
+        if (rowData.isLoading === true) {
+          return;
+        }
+
+        this._abortRequests();
+
+        this._enableRowLoader(rowData);
+
+        var request = new XMLHttpRequest();
+        this._requests.push(request);
+        request.timeout = this.props.timeout;
+        request.ontimeout = this.props.onTimeout;
+        request.onreadystatechange = function () {
+          if (request.readyState !== 4) {
+            return;
+          }
+          if (request.status === 200) {
+            var responseJSON = JSON.parse(request.responseText);
+            if (responseJSON.status === 'OK') {
+              if (_this3._isMounted === true) {
+                var details = responseJSON.result;
+                _this3._disableRowLoaders();
+                _this3._onBlur();
+
+                _this3.setState({
+                  text: _this3._renderDescription(rowData)
+                });
+
+                delete rowData.isLoading;
+                _this3.props.onPress(rowData, details);
+              }
+            } else {
+              _this3._disableRowLoaders();
+
+              if (_this3.props.autoFillOnNotFound) {
+                _this3.setState({
+                  text: _this3._renderDescription(rowData)
+                });
+                delete rowData.isLoading;
+              }
+
+              if (!_this3.props.onNotFound) console.warn('google places autocomplete: ' + responseJSON.status);else _this3.props.onNotFound(responseJSON);
+            }
+          } else {
+            _this3._disableRowLoaders();
+
+            if (!_this3.props.onFail) console.warn('google places autocomplete: request could not be completed or has been aborted');else _this3.props.onFail();
+          }
+        };
+        request.open('GET', 'https://maps.googleapis.com/maps/api/place/details/json?' + _qs2.default.stringify({
+          key: this.props.query.key,
+          placeid: rowData.place_id,
+          language: this.props.query.language
+        }));
+        if (this.props.query.origin !== null) {
+          request.setRequestHeader('Referer', this.props.query.origin);
+        }
+        request.send();
+      } else if (rowData.isCurrentLocation === true) {
+        this._enableRowLoader(rowData);
+
+        this.setState({
+          text: this._renderDescription(rowData)
+        });
+        this.triggerBlur();
+
+        delete rowData.isLoading;
+
+        this.getCurrentLocation();
+      } else {
+        this.setState({
+          text: this._renderDescription(rowData)
+        });
+
+        this._onBlur();
+
+        delete rowData.isLoading;
+
+        var predefinedPlace = this._getPredefinedPlace(rowData);
+
+        this.props.onPress(predefinedPlace, predefinedPlace);
+      }
+    }
+  }, {
+    key: '_enableRowLoader',
+    value: function _enableRowLoader(rowData) {
+      var rows = this.buildRowsFromResults(this._results);
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].place_id === rowData.place_id || rows[i].isCurrentLocation === true && rowData.isCurrentLocation === true) {
+          rows[i].isLoading = true;
+          this.setState({
+            dataSource: rows
+          });
+          break;
+        }
+      }
+    }
+  }, {
+    key: '_disableRowLoaders',
+    value: function _disableRowLoaders() {
+      if (this._isMounted === true) {
+        for (var i = 0; i < this._results.length; i++) {
+          if (this._results[i].isLoading === true) {
+            this._results[i].isLoading = false;
+          }
+        }
+        this.setState({
+          dataSource: this.buildRowsFromResults(this._results)
+        });
+      }
+    }
+  }, {
+    key: '_getPredefinedPlace',
+    value: function _getPredefinedPlace(rowData) {
+      if (rowData.isPredefinedPlace !== true) {
+        return rowData;
+      }
+      for (var i = 0; i < this.props.predefinedPlaces.length; i++) {
+        if (this.props.predefinedPlaces[i].description === rowData.description) {
+          return this.props.predefinedPlaces[i];
+        }
+      }
+      return rowData;
+    }
+  }, {
+    key: '_filterResultsByTypes',
+    value: function _filterResultsByTypes(responseJSON, types) {
+      if (types.length === 0) return responseJSON.results;
+
+      var results = [];
+      for (var i = 0; i < responseJSON.results.length; i++) {
+        var found = false;
+        for (var j = 0; j < types.length; j++) {
+          if (responseJSON.results[i].types.indexOf(types[j]) !== -1) {
+            found = true;
+            break;
+          }
+        }
+        if (found === true) {
+          results.push(responseJSON.results[i]);
+        }
+      }
+      return results;
+    }
+  }, {
+    key: '_requestNearby',
+    value: function _requestNearby(latitude, longitude) {
+      var _this4 = this;
+
+      this._abortRequests();
+      if (latitude !== undefined && longitude !== undefined && latitude !== null && longitude !== null) {
+        var request = new XMLHttpRequest();
+        this._requests.push(request);
+        request.timeout = this.props.timeout;
+        request.ontimeout = this.props.onTimeout;
+        request.onreadystatechange = function () {
+          if (request.readyState !== 4) {
+            return;
+          }
+          if (request.status === 200) {
+            var responseJSON = JSON.parse(request.responseText);
+
+            _this4._disableRowLoaders();
+
+            if (typeof responseJSON.results !== 'undefined') {
+              if (_this4._isMounted === true) {
+                var results = [];
+                if (_this4.props.nearbyPlacesAPI === 'GoogleReverseGeocoding') {
+                  results = _this4._filterResultsByTypes(responseJSON, _this4.props.filterReverseGeocodingByTypes);
+                } else {
+                  results = responseJSON.results;
+                }
+
+                _this4.setState({
+                  dataSource: _this4.buildRowsFromResults(results)
+                });
+              }
+            }
+            if (typeof responseJSON.error_message !== 'undefined') {
+              console.warn('google places autocomplete: ' + responseJSON.error_message);
+            }
+          } else {}
+        };
+
+        var url = '';
+        if (this.props.nearbyPlacesAPI === 'GoogleReverseGeocoding') {
+          url = 'https://maps.googleapis.com/maps/api/geocode/json?' + _qs2.default.stringify(babelHelpers.extends({
+            latlng: latitude + ',' + longitude,
+            key: this.props.query.key
+          }, this.props.GoogleReverseGeocodingQuery));
+        } else {
+          url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?' + _qs2.default.stringify(babelHelpers.extends({
+            location: latitude + ',' + longitude,
+            key: this.props.query.key
+          }, this.props.GooglePlacesSearchQuery));
+        }
+
+        request.open('GET', url);
+        if (this.props.query.origin !== null) {
+          request.setRequestHeader('Referer', this.props.query.origin);
+        }
+        request.send();
+      } else {
+        this._results = [];
+        this.setState({
+          dataSource: this.buildRowsFromResults([])
+        });
+      }
+    }
+  }, {
+    key: '_request',
+    value: function _request(text) {
+      var _this5 = this;
+
+      this._abortRequests();
+      if (text.length >= this.props.minLength) {
+        var request = new XMLHttpRequest();
+        this._requests.push(request);
+        request.timeout = this.props.timeout;
+        request.ontimeout = this.props.onTimeout;
+        request.onreadystatechange = function () {
+          if (request.readyState !== 4) {
+            return;
+          }
+          if (request.status === 200) {
+            var responseJSON = JSON.parse(request.responseText);
+            if (typeof responseJSON.predictions !== 'undefined') {
+              if (_this5._isMounted === true) {
+                _this5._results = responseJSON.predictions;
+                _this5.setState({
+                  dataSource: _this5.buildRowsFromResults(responseJSON.predictions)
+                });
+              }
+            }
+            if (typeof responseJSON.error_message !== 'undefined') {
+              console.warn('google places autocomplete: ' + responseJSON.error_message);
+            }
+          } else {}
+        };
+        request.open('GET', 'https://maps.googleapis.com/maps/api/place/autocomplete/json?&input=' + encodeURIComponent(text) + '&' + _qs2.default.stringify(this.props.query));
+        if (this.props.query.origin !== null) {
+          request.setRequestHeader('Referer', this.props.query.origin);
+        }
+        request.send();
+      } else {
+        this._results = [];
+        this.setState({
+          dataSource: this.buildRowsFromResults([])
+        });
+      }
+    }
+  }, {
+    key: '_onChangeText',
+    value: function _onChangeText(text) {
+      this._request(text);
+      this.setState({
+        text: text,
+        listViewDisplayed: true
+      });
+    }
+  }, {
+    key: '_handleChangeText',
+    value: function _handleChangeText(text) {
+      this._onChangeText(text);
+      var onChangeText = this.props && this.props.textInputProps && this.props.textInputProps.onChangeText;
+      if (onChangeText) {
+        onChangeText(text);
+      }
+    }
+  }, {
+    key: '_getRowLoader',
+    value: function _getRowLoader() {
+      return _react2.default.createElement(_reactNative.ActivityIndicator, {
+        animating: true,
+        size: 'small',
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 531
+        }
+      });
+    }
+  }, {
+    key: '_renderRowData',
+    value: function _renderRowData(rowData) {
+      if (this.props.renderRow) {
+        return this.props.renderRow(rowData);
+      }
+
+      return _react2.default.createElement(
+        _reactNative.Text,
+        { style: [{ flex: 1 }, defaultStyles.description, this.props.styles.description, rowData.isPredefinedPlace ? this.props.styles.predefinedPlacesDescription : {}],
+          numberOfLines: 1,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 544
+          }
+        },
+        this._renderDescription(rowData)
+      );
+    }
+  }, {
+    key: '_renderDescription',
+    value: function _renderDescription(rowData) {
+      if (this.props.renderDescription) {
+        return this.props.renderDescription(rowData);
+      }
+
+      return rowData.description || rowData.formatted_address || rowData.name;
+    }
+  }, {
+    key: '_renderLoader',
+    value: function _renderLoader(rowData) {
+      if (rowData.isLoading === true) {
+        return _react2.default.createElement(
+          _reactNative.View,
+          {
+            style: [defaultStyles.loader, this.props.styles.loader],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 563
+            }
+          },
+          this._getRowLoader()
+        );
+      }
+      return null;
+    }
+  }, {
+    key: '_renderRow',
+    value: function _renderRow() {
+      var rowData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      var _this6 = this;
+
+      var sectionID = arguments[1];
+      var rowID = arguments[2];
+
+      return _react2.default.createElement(
+        _reactNative.ScrollView,
+        {
+          style: { flex: 1 },
+          scrollEnabled: this.props.isRowScrollable,
+          keyboardShouldPersistTaps: this.props.keyboardShouldPersistTaps,
+          horizontal: true,
+          showsHorizontalScrollIndicator: false,
+          showsVerticalScrollIndicator: false, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 575
+          }
+        },
+        _react2.default.createElement(
+          _reactNative.TouchableHighlight,
+          {
+            style: { width: WINDOW.width },
+            onPress: function onPress() {
+              return _this6._onPress(rowData);
+            },
+            underlayColor: this.props.listUnderlayColor || "#c8c7cc",
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 582
+            }
+          },
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: [defaultStyles.row, this.props.styles.row, rowData.isPredefinedPlace ? this.props.styles.specialItemRow : {}], __source: {
+                fileName: _jsxFileName,
+                lineNumber: 587
+              }
+            },
+            this._renderRowData(rowData),
+            this._renderLoader(rowData)
+          )
+        )
+      );
+    }
+  }, {
+    key: '_renderSeparator',
+    value: function _renderSeparator(sectionID, rowID) {
+      if (rowID == this.state.dataSource.length - 1) {
+        return null;
+      }
+
+      return _react2.default.createElement(_reactNative.View, {
+        key: sectionID + '-' + rowID,
+        style: [defaultStyles.separator, this.props.styles.separator], __source: {
+          fileName: _jsxFileName,
+          lineNumber: 602
+        }
+      });
+    }
+  }, {
+    key: '_onBlur',
+    value: function _onBlur() {
+      this.triggerBlur();
+      this.setState({
+        listViewDisplayed: false
+      });
+    }
+  }, {
+    key: '_onFocus',
+    value: function _onFocus() {
+      this.setState({
+        listViewDisplayed: true
+      });
+    }
+  }, {
+    key: '_renderPoweredLogo',
+    value: function _renderPoweredLogo() {
+      if (!this._shouldShowPoweredLogo()) {
+        return null;
+      }
+
+      return _react2.default.createElement(
+        _reactNative.View,
+        {
+          style: [defaultStyles.row, defaultStyles.poweredContainer, this.props.styles.poweredContainer],
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 627
+          }
+        },
+        _react2.default.createElement(_reactNative.Image, {
+          style: [defaultStyles.powered, this.props.styles.powered],
+          resizeMode: _reactNative.Image.resizeMode.contain,
+          source: require('./images/powered_by_google_on_white.png'),
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 630
+          }
+        })
+      );
+    }
+  }, {
+    key: '_shouldShowPoweredLogo',
+    value: function _shouldShowPoweredLogo() {
+      if (!this.props.enablePoweredByContainer || this.state.dataSource.length == 0) {
+        return false;
+      }
+
+      for (var i = 0; i < this.state.dataSource.length; i++) {
+        var row = this.state.dataSource[i];
+
+        if (!row.hasOwnProperty('isCurrentLocation') && !row.hasOwnProperty('isPredefinedPlace')) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: '_renderLeftButton',
+    value: function _renderLeftButton() {
+      if (this.props.renderLeftButton) {
+        return this.props.renderLeftButton();
+      }
+    }
+  }, {
+    key: '_renderRightButton',
+    value: function _renderRightButton() {
+      if (this.props.renderRightButton) {
+        return this.props.renderRightButton();
+      }
+    }
+  }, {
+    key: '_getFlatList',
+    value: function _getFlatList() {
+      var _this7 = this;
+
+      if ((this.state.text !== '' || this.props.predefinedPlaces.length || this.props.currentLocation === true) && this.state.listViewDisplayed === true) {
+        return _react2.default.createElement(_reactNative.FlatList, babelHelpers.extends({
+          style: [defaultStyles.listView, this.props.styles.listView],
+          data: this.state.dataSource,
+          keyExtractor: function keyExtractor(item) {
+            return item.description;
+          },
+          extraData: [this.state.dataSource, this.props],
+          ItemSeparatorComponent: this._renderSeparator,
+          renderItem: function renderItem(_ref) {
+            var item = _ref.item;
+            return _this7._renderRow(item);
+          },
+          ListFooterComponent: this._renderPoweredLogo
+        }, this.props, {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 668
+          }
+        }));
+      }
+
+      return null;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this8 = this;
+
+      var _props$textInputProps = this.props.textInputProps,
+          onFocus = _props$textInputProps.onFocus,
+          userProps = babelHelpers.objectWithoutProperties(_props$textInputProps, ['onFocus']);
+
+      return _react2.default.createElement(
+        _reactNative.View,
+        {
+          style: [defaultStyles.container, this.props.styles.container],
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 689
+          }
+        },
+        _react2.default.createElement(
+          _reactNative.View,
+          {
+            style: [defaultStyles.textInputContainer, this.props.styles.textInputContainer],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 692
+            }
+          },
+          this._renderLeftButton(),
+          _react2.default.createElement(_reactNative.TextInput, babelHelpers.extends({
+            ref: 'textInput',
+            returnKeyType: this.props.returnKeyType,
+            autoFocus: this.props.autoFocus,
+            style: [defaultStyles.textInput, this.props.styles.textInput],
+            onChangeText: this._handleChangeText,
+            value: this.state.text,
+            placeholder: this.props.placeholder,
+
+            placeholderTextColor: this.props.placeholderTextColor,
+            onFocus: onFocus ? function () {
+              _this8._onFocus();onFocus();
+            } : this._onFocus,
+            clearButtonMode: 'while-editing',
+            underlineColorAndroid: this.props.underlineColorAndroid
+          }, userProps, {
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 696
+            }
+          })),
+          this._renderRightButton()
+        ),
+        this._getFlatList(),
+        this.props.children
+      );
+    }
+  }]);
+  return GooglePlacesAutocomplete;
+}(_react.Component);
+
+exports.default = GooglePlacesAutocomplete;
+
+
+GooglePlacesAutocomplete.propTypes = {
+  placeholder: _propTypes2.default.string,
+  placeholderTextColor: _propTypes2.default.string,
+  underlineColorAndroid: _propTypes2.default.string,
+  returnKeyType: _propTypes2.default.string,
+  onPress: _propTypes2.default.func,
+  onNotFound: _propTypes2.default.func,
+  onFail: _propTypes2.default.func,
+  minLength: _propTypes2.default.number,
+  fetchDetails: _propTypes2.default.bool,
+  autoFocus: _propTypes2.default.bool,
+  autoFillOnNotFound: _propTypes2.default.bool,
+  getDefaultValue: _propTypes2.default.func,
+  timeout: _propTypes2.default.number,
+  onTimeout: _propTypes2.default.func,
+  query: _propTypes2.default.object,
+  GoogleReverseGeocodingQuery: _propTypes2.default.object,
+  GooglePlacesSearchQuery: _propTypes2.default.object,
+  styles: _propTypes2.default.object,
+  textInputProps: _propTypes2.default.object,
+  enablePoweredByContainer: _propTypes2.default.bool,
+  predefinedPlaces: _propTypes2.default.array,
+  currentLocation: _propTypes2.default.bool,
+  currentLocationLabel: _propTypes2.default.string,
+  nearbyPlacesAPI: _propTypes2.default.string,
+  enableHighAccuracyLocation: _propTypes2.default.bool,
+  filterReverseGeocodingByTypes: _propTypes2.default.array,
+  predefinedPlacesAlwaysVisible: _propTypes2.default.bool,
+  enableEmptySections: _propTypes2.default.bool,
+  renderDescription: _propTypes2.default.func,
+  renderRow: _propTypes2.default.func,
+  renderLeftButton: _propTypes2.default.func,
+  renderRightButton: _propTypes2.default.func,
+  listUnderlayColor: _propTypes2.default.string,
+  debounce: _propTypes2.default.number,
+  isRowScrollable: _propTypes2.default.bool
+};
+GooglePlacesAutocomplete.defaultProps = {
+  placeholder: 'Search',
+  placeholderTextColor: '#A8A8A8',
+  isRowScrollable: true,
+  underlineColorAndroid: 'transparent',
+  returnKeyType: 'default',
+  onPress: function onPress() {},
+  onNotFound: function onNotFound() {},
+  onFail: function onFail() {},
+  minLength: 0,
+  fetchDetails: false,
+  autoFocus: false,
+  autoFillOnNotFound: false,
+  keyboardShouldPersistTaps: 'always',
+  getDefaultValue: function getDefaultValue() {
+    return '';
+  },
+  timeout: 20000,
+  onTimeout: function onTimeout() {
+    return console.warn('google places autocomplete: request timeout');
+  },
+  query: {
+    key: 'missing api key',
+    language: 'en',
+    types: 'geocode'
+  },
+  GoogleReverseGeocodingQuery: {},
+  GooglePlacesSearchQuery: {
+    rankby: 'distance',
+    types: 'food'
+  },
+  styles: {},
+  textInputProps: {},
+  enablePoweredByContainer: true,
+  predefinedPlaces: [],
+  currentLocation: false,
+  currentLocationLabel: 'Current location',
+  nearbyPlacesAPI: 'GooglePlacesSearch',
+  enableHighAccuracyLocation: true,
+  filterReverseGeocodingByTypes: [],
+  predefinedPlacesAlwaysVisible: false,
+  enableEmptySections: true,
+  listViewDisplayed: 'auto',
+  debounce: 0
+};
+
+var create = function create() {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  return _react2.default.createClass({
+    render: function render() {
+      return _react2.default.createElement(GooglePlacesAutocomplete, babelHelpers.extends({
+        ref: 'GooglePlacesAutocomplete'
+      }, options, {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 804
+        }
+      }));
+    }
+  });
+};
+
+module.exports = {
+  GooglePlacesAutocomplete: GooglePlacesAutocomplete,
+  create: create
+};

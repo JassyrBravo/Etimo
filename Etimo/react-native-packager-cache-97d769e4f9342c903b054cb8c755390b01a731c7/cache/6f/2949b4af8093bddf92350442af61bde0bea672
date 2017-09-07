@@ -1,0 +1,566 @@
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+var _jsxFileName = '/Users/Jassyr/pruebaGoogleJassyr/App.js';
+
+var _react = require('react');
+
+var _react2 = babelHelpers.interopRequireDefault(_react);
+
+var _expo = require('expo');
+
+var _reactNative = require('react-native');
+
+var _reactNativeGooglePlacesAutocomplete = require('react-native-google-places-autocomplete');
+
+var _Dimensions$get = _reactNative.Dimensions.get('window'),
+    height = _Dimensions$get.height,
+    width = _Dimensions$get.width;
+
+var App = function (_React$Component) {
+  babelHelpers.inherits(App, _React$Component);
+
+  function App() {
+    babelHelpers.classCallCheck(this, App);
+    return babelHelpers.possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+  }
+
+  babelHelpers.createClass(App, [{
+    key: '_addCountry',
+    value: function _addCountry() {
+      _reactNative.Alert.alert('Add country');
+      console.log('Add country button' + width);
+    }
+  }, {
+    key: '_previousPage',
+    value: function _previousPage() {
+      _reactNative.Alert.alert('Previous Page');
+      console.log('Previous Page button');
+    }
+  }, {
+    key: '_nextPage',
+    value: function _nextPage() {
+      _reactNative.Alert.alert('Next Page');
+      console.log('Next Page button');
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _reactNative.View,
+        { style: styles.container, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 37
+          }
+        },
+        _react2.default.createElement(
+          _reactNative.View,
+          { style: { height: 50 }, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 39
+            }
+          },
+          _react2.default.createElement(
+            _reactNative.Text,
+            { style: styles.titulo, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 40
+              }
+            },
+            'My countries'
+          )
+        ),
+        _react2.default.createElement(
+          _reactNative.View,
+          { style: styles.container2, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 45
+            }
+          },
+          _react2.default.createElement(_reactNativeGooglePlacesAutocomplete.GooglePlacesAutocomplete, {
+            placeholder: 'Search for country',
+            minLength: 2,
+            autoFocus: false,
+            returnKeyType: 'search',
+            listViewDisplayed: 'auto',
+            fetchDetails: true,
+            renderDescription: function renderDescription(row) {
+              return row.description;
+            },
+            onPress: function onPress(data) {
+              var details = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+              console.log(data);
+              console.log(details);
+            },
+            getDefaultValue: function getDefaultValue() {
+              return '';
+            },
+            query: {
+              key: 'AIzaSyBkVFTfwigEIefrIb9IVPkkpxpzWQZU-Eg',
+              language: 'en',
+              types: '(cities)' },
+            styles: {
+
+              textInputContainer: {
+                backgroundColor: '#EDEDED',
+                borderTopWidth: 0,
+                borderBottomWidth: 0
+              },
+              textInput: {
+                marginLeft: 0,
+                marginRight: 0,
+                height: 38,
+                color: '#5d5d5d',
+                backgroundColor: '#EDEDED',
+                fontSize: 16,
+                padding: 10
+              },
+              description: {
+                fontWeight: 'bold'
+
+              },
+              predefinedPlacesDescription: {
+                color: '#1faadb'
+              }
+            },
+            currentLocation: false,
+            currentLocationLabel: 'Current location',
+            nearbyPlacesAPI: 'GooglePlacesSearch',
+            GoogleReverseGeocodingQuery: {},
+            GooglePlacesSearchQuery: {
+              rankby: 'distance',
+              types: 'food'
+            },
+            filterReverseGeocodingByTypes: ['locality', 'administrative_area_level_3'], __source: {
+              fileName: _jsxFileName,
+              lineNumber: 47
+            }
+          }),
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.bluebuttonContainer, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 117
+              }
+            },
+            _react2.default.createElement(_reactNative.Button, { style: styles.bluebuttonContainer, onPress: this._addCountry, title: 'Add +', color: '#FFFFFF', accessibilityLabel: 'Tap on Me', __source: {
+                fileName: _jsxFileName,
+                lineNumber: 118
+              }
+            })
+          )
+        ),
+        _react2.default.createElement(
+          _reactNative.View,
+          { style: { flex: 3 }, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 123
+            }
+          },
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.container3, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 127
+              }
+            },
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: { flex: 3 }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 129
+                }
+              },
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.bodytext, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 130
+                  }
+                },
+                'Mexico'
+              )
+            ),
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: styles.container4, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 133
+                }
+              },
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/pequestar.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 134
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/trash.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 137
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/staroff.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 140
+                }
+              })
+            )
+          ),
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.container3, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 145
+              }
+            },
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: { flex: 3 }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 147
+                }
+              },
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.bodytext, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 148
+                  }
+                },
+                'Mexico'
+              )
+            ),
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: styles.container4, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 151
+                }
+              },
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/pequestar.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 152
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/trash.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 155
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/staroff.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 158
+                }
+              })
+            )
+          ),
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.container3, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 163
+              }
+            },
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: { flex: 3 }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 165
+                }
+              },
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.bodytext, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 166
+                  }
+                },
+                'Mexico'
+              )
+            ),
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: styles.container4, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 169
+                }
+              },
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/pequestar.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 170
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/trash.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 173
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/staroff.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 176
+                }
+              })
+            )
+          ),
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.container3, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 181
+              }
+            },
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: { flex: 3 }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 183
+                }
+              },
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.bodytext, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 184
+                  }
+                },
+                'Mexico'
+              )
+            ),
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: styles.container4, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 187
+                }
+              },
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/pequestar.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 188
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/trash.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 191
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/staroff.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 194
+                }
+              })
+            )
+          ),
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.container3, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 199
+              }
+            },
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: { flex: 3 }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 201
+                }
+              },
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.bodytext, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 202
+                  }
+                },
+                'Mexico'
+              )
+            ),
+            _react2.default.createElement(
+              _reactNative.View,
+              { style: styles.container4, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 205
+                }
+              },
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/pequestar.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 206
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/trash.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 209
+                }
+              }),
+              _react2.default.createElement(_reactNative.Image, {
+                source: require('./Image/staroff.png'),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 212
+                }
+              })
+            )
+          )
+        ),
+        _react2.default.createElement(
+          _reactNative.View,
+          { style: styles.footercontainer, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 224
+            }
+          },
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.graybuttonContainer, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 226
+              }
+            },
+            _react2.default.createElement(_reactNative.Button, { onPress: this._previousPage, title: 'Previos page', color: '#FFFFFF', accessibilityLabel: 'Tap on Me', __source: {
+                fileName: _jsxFileName,
+                lineNumber: 227
+              }
+            })
+          ),
+          _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.bluebuttonContainer, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 230
+              }
+            },
+            _react2.default.createElement(_reactNative.Button, { onPress: this._nextPage, title: 'Next page', color: '#FFFFFF', accessibilityLabel: 'Tap on Me', __source: {
+                fileName: _jsxFileName,
+                lineNumber: 231
+              }
+            })
+          )
+        )
+      );
+    }
+  }]);
+  return App;
+}(_react2.default.Component);
+
+exports.default = App;
+
+
+var styles = _reactNative.StyleSheet.create({
+  bluebuttonContainer: {
+    backgroundColor: '#4990E2',
+    borderRadius: 5,
+    padding: 3,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowRadius: 10,
+    shadowOpacity: 0.25
+  },
+  graybuttonContainer: {
+    backgroundColor: '#EDEDED',
+    borderRadius: 5,
+    padding: 3,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowRadius: 10,
+    shadowOpacity: 0.25
+  },
+
+  container: {
+
+    flex: 1,
+    flexDirection: 'column',
+
+    justifyContent: 'flex-start',
+    padding: 5
+  },
+  footercontainer: {
+    height: 50,
+    flexDirection: 'row',
+
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 9
+  },
+
+  container2: {
+    flex: 1,
+    position: 'relative',
+
+    flexDirection: 'row',
+
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    padding: 9
+  },
+  container3: {
+    flex: 1,
+    flexDirection: 'row',
+
+    justifyContent: 'space-between',
+    padding: 0
+  },
+
+  container4: {
+    flex: 1,
+    flexDirection: 'row',
+
+    justifyContent: 'space-between',
+    padding: 0
+  },
+
+  textContainer: {
+    alignItems: 'center',
+    justifyContent: 'center'
+
+  },
+  titulo: {
+    color: 'black',
+    fontWeight: '400',
+    fontSize: 32,
+    fontFamily: 'Helvetica Neue',
+    textAlign: 'left',
+    padding: 10
+  },
+  bodytext: {
+    color: 'black',
+    fontWeight: 'normal',
+    fontSize: 18,
+    fontFamily: 'Helvetica Neue',
+    textAlign: 'left',
+    padding: 0
+  }
+});
